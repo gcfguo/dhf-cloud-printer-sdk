@@ -11,7 +11,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"dhf-cloud-printer-sdk/model"
+	"github.com/gcfguo/dhf-cloud-printer-sdk/model"
 )
 
 type Client struct {
@@ -81,7 +81,6 @@ func (c *Client) doRequest(authorize bool, method string, url string, body any, 
 		if _, ok := err.(net.Error); ok {
 			continue
 		}
-
 		return err
 	}
 
