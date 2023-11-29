@@ -11,7 +11,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"dhf-cloud-printer-sdk/model"
+	"github.com/gcfguo/dhf-cloud-printer-sdk/model"
 )
 
 type Client struct {
