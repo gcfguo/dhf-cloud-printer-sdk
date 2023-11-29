@@ -81,7 +81,6 @@ func (c *Client) doRequest(authorize bool, method string, url string, body any, 
 		if _, ok := err.(net.Error); ok {
 			continue
 		}
-
 		return err
 	}
 
