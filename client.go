@@ -14,14 +14,15 @@ import (
 	"github.com/gcfguo/dhf-cloud-printer-sdk/model"
 )
 
+var authToken atomic.Value
+var authTime atomic.Int64
+
 type Client struct {
 	serverURL  string
 	email      string
 	password   string
 	httpClient *http.Client
 	debug      bool
-	token      atomic.Value
-	stamp      atomic.Int64
 }
 
 func NewClient(opts ...ClientOption) *Client {
@@ -39,8 +40,6 @@ func NewClient(opts ...ClientOption) *Client {
 		password:   defaultSettings.Password,
 		httpClient: defaultSettings.HTTPClient,
 		debug:      defaultSettings.Debug,
-		token:      atomic.Value{},
-		stamp:      atomic.Int64{},
 	}
 }
 
@@ -55,9 +54,9 @@ func (c *Client) doRequest(authorize bool, method string, url string, body any, 
 		var tokenValue string
 		var ok bool
 		a := time.Now().Add(time.Hour * -2).Unix()
-		b := c.stamp.Load()
+		b := authTime.Load()
 		if a != 0 && a < b {
-			v := c.token.Load()
+			v := authToken.Load()
 			tokenValue, ok = v.(string)
 			if !ok {
 				tokenValue, err = c.getAndLoadToken(nowStamp)
@@ -150,8 +149,8 @@ func (c *Client) getAndLoadToken(nowStamp int64) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	c.token.Store(got.TokenValue)
-	c.stamp.Store(nowStamp)
+	authToken.Store(got.TokenValue)
+	authTime.Store(nowStamp)
 	return got.TokenValue, nil
 }
 
@@ -243,8 +242,8 @@ func (c *Client) Print(reqInf *model.PrintReq) (*model.PrintRes, error) {
 // ClearToken 清除当前授权的token
 // 当你的授权信息发生变化时,请先清除token
 func (c *Client) ClearToken() {
-	c.token.Store("")
-	c.stamp.Store(0)
+	authToken.Store("")
+	authTime.Store(0)
 }
 
 func (c *Client) concatURL(uri string) string {
