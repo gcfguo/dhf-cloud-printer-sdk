@@ -8,6 +8,7 @@ type (
 	}
 
 	PrinterBindRes struct {
+		PrinterID string `json:"printer_id"`
 	}
 )
 
