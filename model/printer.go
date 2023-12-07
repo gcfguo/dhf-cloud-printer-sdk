@@ -28,7 +28,7 @@ type (
 	ListPrinterRes struct {
 		List []struct {
 			PrinterName string `json:"printer_name" `
-			HostMac     string `json:"host_mac"     `
+			HostID      string `json:"host_id"     `
 			PrinterId   string `json:"printer_id"   `
 			Status      string `json:"status"       `
 			CreateTime  string `json:"create_time"  `
